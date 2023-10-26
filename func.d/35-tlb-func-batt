@@ -1,10 +1,10 @@
 #!/bin/sh
-# tlp-func-batt - Battery Feature Functions
+# tlb-func-batt - Battery Feature Functions
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-# Needs: tlp-func-base, 34-tlp-func-platform
+# Needs: tlb-func-base, 34-tlb-func-platform
 
 # ----------------------------------------------------------------------------
 # Constants
@@ -18,7 +18,7 @@ readonly ACPIBATDIR=/sys/class/power_supply
 set_charge_thresholds () {
     # apply configured thresholds from configuration to all batteries
     # optional depending on active plugin when specified in $1
-    # - called from bg tasks tlp init [re]start/auto and tlp start
+    # - called from bg tasks tlb init [re]start/auto and tlb start
     # $1: plugin list (space separated)
     # rc: 0=ok/
     #     1=battery not present/
@@ -53,7 +53,7 @@ set_charge_thresholds () {
 
 setcharge_battery () {
     # write charge thresholds
-    # - called from tlp setcharge/fullcharge/recalibrate
+    # - called from tlb setcharge/fullcharge/recalibrate
     # $1: start charge threshold,
     # $2: stop charge threshold
     # $3: battery

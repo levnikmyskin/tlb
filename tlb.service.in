@@ -1,20 +1,19 @@
-# tlp - systemd startup/shutdown service
+# tlb - systemd startup/shutdown service
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 [Unit]
-Description=TLP system startup/shutdown
+Description=TLB system startup/shutdown
 After=multi-user.target NetworkManager.service
 Before=shutdown.target
-Documentation=https://linrunner.de/tlp
+Documentation=https://linrunner.de/tlb
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@TLP_SBIN@/tlp init start
-ExecReload=@TLP_SBIN@/tlp start
-ExecStop=@TLP_SBIN@/tlp init stop
+ExecStart=@TLB_SBIN@/tlb init start
+ExecReload=@TLB_SBIN@/tlb start
 
 [Install]
 WantedBy=multi-user.target

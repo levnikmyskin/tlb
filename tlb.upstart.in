@@ -1,24 +1,18 @@
-# tlp - system startup/shutdown
+# tlb - system startup/shutdown
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # This software is licensed under the GPL v2 or later.
 
-description "tlp"
+description "tlb"
 
 start on ( virtual-filesystems and runlevel [2345] )
 stop on runlevel [!2345]
 
-env TLP=@TLP_SBIN@/tlp
+env TLB=@TLB_SBIN@/tlb
 
 pre-start script
-    [ -x $TLP ] || exit 4
-    $TLP init start
-
-end script
-
-post-stop script
-    [ -x $TLP ] || exit 4
-    $TLP init stop
+    [ -x $TLB ] || exit 4
+    $TLB init start
 
 end script
 

@@ -1,10 +1,10 @@
 #!/bin/sh
 # 15-asus - Battery Plugin for ASUS laptops w/ asus_wmi driver
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-# Needs: tlp-func-base, 35-tlp-func-batt, tlp-func-stat
+# Needs: tlb-func-base, 35-tlb-func-batt, tlb-func-stat
 
 # --- Hardware Detection
 
@@ -170,11 +170,11 @@ batdrv_select_battery () {
 
 batdrv_read_threshold () {
     # read and print charge threshold (stop only)
-    # $1: 0=api/1=tlp-stat output
+    # $1: 0=api/1=tlb-stat output
     # global param: $_bf_stop
     # out:
     # - api: 0..100/"" on error
-    # - tlp-stat: 0..100/"(not available)" on error
+    # - tlb-stat: 0..100/"(not available)" on error
     # rc: 0=ok/4=read error/255=no api
     # prerequisite: batdrv_init(), batdrv_select_battery()
 
@@ -370,7 +370,7 @@ batdrv_discharge () {
     # function not implemented for ASUS laptops
 
     # Important: release lock from caller
-    unlock_tlp tlp_discharge
+    unlock_tlb tlb_discharge
 
     echo_debug "bat" "batdrv.${_batdrv_plugin}.discharge.not_implemented"
     return 255

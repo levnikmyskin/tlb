@@ -1,10 +1,10 @@
 #!/bin/sh
 # 25-ideapad - Battery Plugin for Lenovo laptops w/ ideapad_laptop driver
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-# Needs: tlp-func-base, 35-tlp-func-batt, tlp-func-stat
+# Needs: tlb-func-base, 35-tlb-func-batt, tlb-func-stat
 
 # --- Hardware Detection
 
@@ -332,7 +332,7 @@ batdrv_discharge () {
     # function not implemented for Ideapads
 
     # Important: release lock from caller
-    unlock_tlp tlp_discharge
+    unlock_tlb tlb_discharge
 
     echo_debug "bat" "batdrv.${_batdrv_plugin}.discharge.not_implemented"
     return 255

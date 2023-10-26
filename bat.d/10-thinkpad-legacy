@@ -3,10 +3,10 @@
 # for thresholds and forced discharge,
 # i.e. X201/T410 and older.
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-# Needs: tlp-func-base, 35-tlp-func-batt, tlp-func-stat, 05-thinkpad
+# Needs: tlb-func-base, 35-tlb-func-batt, tlb-func-stat, 05-thinkpad
 
 # --- Plugin API functions
 
@@ -208,11 +208,11 @@ batdrv_select_battery () {
 batdrv_read_threshold () {
     # read and print charge threshold
     # $1: start/stop
-    # $2: 0=api/1=tlp-stat output
+    # $2: 0=api/1=tlb-stat output
     # global param: $_bm_thresh, $_bf_start, $_bf_stop
     # out:
     # - api: 0..100/"" on error
-    # - tlp-stat: 0..100/"(not available)" on error
+    # - tlb-stat: 0..100/"(not available)" on error
     # rc: 0=ok/4=read error/255=no api
     # prerequisite: batdrv_init(), batdrv_select_battery()
 
@@ -524,10 +524,10 @@ batdrv_apply_configured_thresholds () {
 
 batdrv_read_force_discharge () {
     # read and print force discharge state
-    # $1: 0=api/1=tlp-stat output
+    # $1: 0=api/1=tlb-stat output
     # global param: $_bm_dischg, $_bf_dischg
     # - api: 0=off/1=on/"" on error
-    # - tlp-stat: 0=off/1=on/"(not available)" on error
+    # - tlb-stat: 0=off/1=on/"(not available)" on error
     # rc: 0=ok/4=read error/255=no api
     # prerequisite: batdrv_init(), batdrv_select_battery()
 
@@ -592,7 +592,7 @@ batdrv_cancel_force_discharge () {
     # prerequisite: batdrv_discharge()
 
     batdrv_write_force_discharge 0
-    unlock_tlp tlp_discharge
+    unlock_tlb tlb_discharge
     echo_debug "bat" "batdrv.${_batdrv_plugin}.discharge.cancelled($_bat_str)"
     printf " Cancelled.\n"
 
@@ -674,7 +674,7 @@ batdrv_discharge () {
             printf "Press Ctrl+C to cancel.\n"
             sleep 5
         done
-        unlock_tlp tlp_discharge
+        unlock_tlb tlb_discharge
 
         # read charge level one last time
         case $_bm_read in

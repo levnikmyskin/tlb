@@ -1,7 +1,7 @@
 #!/usr/bin/perl
-# tlp-readconfs - read all of TLP's config files
+# tlb-readconfs - read all of TLB's config files
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 # Cmdline options
@@ -11,10 +11,10 @@
 #
 # Return codes
 #   0: ok
-#   5: tlp.conf missing
+#   5: tlb.conf missing
 #   6: defaults.conf missing
 
-package tlp_readconfs;
+package tlb_readconfs;
 use strict;
 use warnings;
 
@@ -23,15 +23,10 @@ use File::Basename;
 use Getopt::Long;
 
 # --- Constants
-use constant CONF_USR => "@TLP_CONFUSR@";
-use constant CONF_DIR => "@TLP_CONFDIR@";
-use constant CONF_DEF => "@TLP_CONFDEF@";
-use constant CONF_REN => "@TLP_CONFREN@";
-use constant CONF_DPR => "@TLP_CONFDPR@";
-use constant CONF_OLD => "@TLP_CONF@";
+use constant CONF_USR => "@TLB_CONFUSR@";
 
 # Exit codes
-use constant EXIT_TLPCONF => 5;
+use constant EXIT_TLBCONF => 5;
 use constant EXIT_DEFCONF => 6;
 
 # --- Global vars
@@ -49,15 +44,11 @@ my $cdiff   = 0;
 
 my $outfile;
 
-my $defsrc = basename (CONF_DEF);
-
-# --- Subroutines
-
 # Format and write debug message
 # @_: printf arguments including format string
 sub printf_debug {
     if ( ! $notrace && $debug ) {
-        open (my $logpipe, "|-", "logger -p debug -t \"tlp\" --id=\$\$ --") || return 1;
+        open (my $logpipe, "|-", "logger -p debug -t \"tlb\" --id=\$\$ --") || return 1;
         printf {$logpipe} @_;
         close ($logpipe);
     }
@@ -79,7 +70,7 @@ sub store_name_value_source {
     my $source = $_[3];
     my $is_def = $_[4];
 
-    $debug = 1 if ( $name eq "TLP_DEBUG" && $value =~ /\bcfg\b/ );
+    $debug = 1 if ( $name eq "TLB_DEBUG" && $value =~ /\bcfg\b/ );
 
     if ( defined $config_idx{$name} ) {
         # existing name
@@ -93,7 +84,7 @@ sub store_name_value_source {
             $config_val[$config_idx{$name}][2] = $source;
         }
 
-        printf_debug ("tlp-readconfs.replace [%s]: %s=\"%s\" %s\n", $config_idx{$name}, $name, $value, $source);
+        printf_debug ("tlb-readconfs.replace [%s]: %s=\"%s\" %s\n", $config_idx{$name}, $name, $value, $source);
     } else {
         # new name --> store name, value, source and hash name
         if ( $is_def ) {
@@ -105,7 +96,7 @@ sub store_name_value_source {
         }
         $config_idx{$name} = $#config_val;
 
-        printf_debug ("tlp-readconfs.insert  [%s]: %s=\"%s\" %s\n", $#config_val, $name, $value, $source);
+        printf_debug ("tlb-readconfs.insert  [%s]: %s=\"%s\" %s\n", $#config_val, $name, $value, $source);
     }
 
     return 0;
@@ -120,13 +111,8 @@ sub parse_configfile {
     my $do_ren = $_[1];
     my $source;
     my $is_def;
-    if ( $fname eq CONF_DEF ) {
-        $source = $defsrc;
-        $is_def = 1;
-    } else {
-        $source = $fname;
-        $is_def = 0;
-    }
+    $source = $fname;
+    $is_def = 0;
 
     open (my $cf, "<", $fname) || return 1;
 
@@ -249,23 +235,8 @@ sub parse_dprfile {
 # parse arguments
 GetOptions ('outfile=s' => \$outfile, 'notrace' => \$notrace, 'cdiff' => \$cdiff);
 
-# read parameter renaming rules
-parse_renfile (CONF_REN);
-
-# read deprecated parameter messages
-parse_dprfile (CONF_DPR);
-
-# 1. read intrinsic defaults (no renaming)
-parse_configfile (CONF_DEF, 0) == 0 || exit EXIT_DEFCONF;
-
-# 2. read customization (with renaming)
-foreach my $conffile ( grep { -f } glob CONF_DIR . "/*.conf" ) {
-    parse_configfile ($conffile, $do_rename);
-}
-
 # 3. read user settings (with renaming)
-parse_configfile (CONF_USR, $do_rename) == 0
-    || parse_configfile (CONF_OLD, $do_rename) == 0 || exit EXIT_TLPCONF;
+parse_configfile (CONF_USR, $do_rename) == 0 || exit EXIT_TLBCONF;
 
 # save result
 write_runconf ($outfile);

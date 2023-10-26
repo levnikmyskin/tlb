@@ -2,10 +2,10 @@
 # 45-system76 - Battery Plugin for System76 laptops
 #   w/ open source EC firmware and system76_acpi driver
 #
-# Copyright (c) 2023 Thomas Koch <linrunner at gmx.net> and others.
+# Copyright (c) 2023 Alessio Molinari <levnikmyskin at github.com> and others.
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-# Needs: tlp-func-base, 35-tlp-func-batt, tlp-func-stat
+# Needs: tlb-func-base, 35-tlb-func-batt, tlb-func-stat
 
 # --- Hardware Detection
 
@@ -189,11 +189,11 @@ batdrv_select_battery () {
 batdrv_read_threshold () {
     # read and print charge threshold
     # $1: start/stop
-    # $2: 0=api/1=tlp-stat output
+    # $2: 0=api/1=tlb-stat output
     # global param: $_bm_thresh, $_bf_start, $_bf_stop
     # out:
     # - api: 0..100/"" on error
-    # - tlp-stat: 0..100/"(not available)" on error
+    # - tlb-stat: 0..100/"(not available)" on error
     # rc: 0=ok/4=read error/255=no api
     # prerequisite: batdrv_init(), batdrv_select_battery()
 
@@ -469,7 +469,7 @@ batdrv_discharge () {
     # function not implemented
 
     # Important: release lock from caller
-    unlock_tlp tlp_discharge
+    unlock_tlb tlb_discharge
 
     echo_debug "bat" "batdrv.${_batdrv_plugin}.discharge.not_implemented"
     return 255
